@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <!-- Rounded background -->
+  <rect width="120" height="120" rx="28" fill="#4F8CFF"/>
+  <!-- Subtle inner highlight -->
+  <rect width="120" height="120" rx="28" fill="white" opacity="0.07"/>
+
+  <!-- Open book — left page -->
+  <path d="M14,52 C14,47 18,44 23,44 L56,44 L56,90 C41,86 22,88 16,91 C14,91 14,89 14,87 Z" fill="white"/>
+  <!-- Open book — right page (slightly dimmer to show depth) -->
+  <path d="M64,44 L97,44 C102,44 106,47 106,52 L106,87 C106,89 104,91 102,91 C96,88 79,86 64,90 Z" fill="rgba(255,255,255,0.82)"/>
+  <!-- Book spine -->
+  <rect x="56" y="44" width="8" height="46" rx="4" fill="#FFD93D"/>
+
+  <!-- Lines on left page -->
+  <rect x="23" y="55" width="27" height="3" rx="1.5" fill="#4F8CFF" opacity="0.28"/>
+  <rect x="23" y="63" width="27" height="3" rx="1.5" fill="#4F8CFF" opacity="0.28"/>
+  <rect x="23" y="71" width="20" height="3" rx="1.5" fill="#4F8CFF" opacity="0.28"/>
+
+  <!-- 5-pointed star (centered at 60,30, outer r=22, inner r=9) -->
+  <polygon
+    points="60,8 65,23 80,23 68,32 72,47 60,38 48,47 52,32 40,23 55,23"
+    fill="#FFD93D"
+    stroke="white"
+    stroke-width="2"
+    stroke-linejoin="round"
+  />
+
+  <!-- Green sparkle dots -->
+  <circle cx="101" cy="16" r="7" fill="#6BCB77"/>
+  <circle cx="14"  cy="108" r="6" fill="#6BCB77" opacity="0.85"/>
+  <circle cx="106" cy="104" r="5" fill="#6BCB77" opacity="0.65"/>
+  <!-- Small yellow dot top-left -->
+  <circle cx="13"  cy="18"  r="4" fill="#FFD93D" opacity="0.75"/>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Blue background -->
+  <rect width="32" height="32" rx="7" fill="#4F8CFF"/>
+  <!-- Star -->
+  <polygon
+    points="16,3 17.8,10 25,10 19.1,14.2 21.2,21 16,16.8 10.8,21 12.9,14.2 7,10 14.2,10"
+    fill="#FFD93D"
+  />
+  <!-- Green dot -->
+  <circle cx="27" cy="5" r="3" fill="#6BCB77"/>
+</svg>
