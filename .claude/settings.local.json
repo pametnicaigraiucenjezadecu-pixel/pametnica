@@ -14,7 +14,11 @@
       "Bash(cp -r 'c:/Users/PC/Desktop/Interaktivna aplikacija za decu/edu-kids/__TRACKED_VAR__' 'c:/Users/PC/Desktop/Interaktivna aplikacija za decu/')",
       "Read(//c/Users/PC/.claude/projects/c--Users-PC-Desktop-Interaktivna-aplikacija-za-decu/memory/**)",
       "PowerShell(cd \"C:\\\\Users\\\\PC\\\\Desktop\\\\Interaktivna aplikacija za decu\"; Get-ChildItem dist -Recurse | Where-Object { !$_.PSIsContainer } | Select-Object FullName, @{N='Size\\(KB\\)';E={[math]::Round\\($_.Length/1KB,1\\)}} | Sort-Object 'Size\\(KB\\)' -Descending)",
-      "PowerShell(cd \"C:\\\\Users\\\\PC\\\\Desktop\\\\Interaktivna aplikacija za decu\"; Get-ChildItem dist -Recurse -File | ForEach-Object { \"$\\([math]::Round\\($_.Length/1KB,1\\)\\) KB `t$\\($_.FullName.Replace\\('C:\\\\Users\\\\PC\\\\Desktop\\\\Interaktivna aplikacija za decu\\\\dist\\\\',''\\)\\)\" } | Sort-Object)"
+      "PowerShell(cd \"C:\\\\Users\\\\PC\\\\Desktop\\\\Interaktivna aplikacija za decu\"; Get-ChildItem dist -Recurse -File | ForEach-Object { \"$\\([math]::Round\\($_.Length/1KB,1\\)\\) KB `t$\\($_.FullName.Replace\\('C:\\\\Users\\\\PC\\\\Desktop\\\\Interaktivna aplikacija za decu\\\\dist\\\\',''\\)\\)\" } | Sort-Object)",
+      "Bash(git config *)",
+      "Bash(git credential-manager *)",
+      "Bash(git credential-manager-core *)",
+      "Bash(git push *)"
     ],
     "additionalDirectories": [
       "c:\\Users\\PC\\Desktop\\Vexquara bot\\frontend",
