@@ -4,6 +4,7 @@ import { isSoundEnabled, toggleSound } from '../services/speech';
 import { t } from '../data/translations';
 import { useScript } from '../hooks/useScript';
 import { UiModeToggle } from '../components/UiModeToggle';
+import { ResumePrompt } from '../components/ResumePrompt';
 import type { WorldStatus, WorldId } from '../types';
 
 const AVATARS = ['🐱', '🐶', '🐰', '🦊', '🐻', '🐨', '🦁', '🐵', '🐸', '🐧'];
@@ -118,6 +119,7 @@ export const WorldMapScreen: React.FC = () => {
       <div className="wm-brand" aria-label="Pametnica">
         <img src="/logo.svg" alt="Pametnica logo" className="wm-brand__logo" />
         <span className="wm-brand__name">Pametnica</span>
+        <span className="wm-autosave" title="Napredak se automatski čuva">✓ Sačuvano</span>
       </div>
 
       {/* Decorative stars */}
@@ -187,6 +189,9 @@ export const WorldMapScreen: React.FC = () => {
 
       {/* Notification overlay */}
       <NotificationToast />
+
+      {/* Resume prompt — shown if there's an interrupted game */}
+      <ResumePrompt />
     </div>
   );
 };

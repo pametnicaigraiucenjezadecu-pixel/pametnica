@@ -1492,6 +1492,184 @@ input  { font-family: inherit; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   AUTOSAVE INDICATOR
+   ═══════════════════════════════════════════════════════════════════════════ */
+.wm-autosave {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.3px;
+  margin-left: auto;
+  padding: 3px 8px;
+  border-radius: var(--r-full);
+  border: 1px solid rgba(255,255,255,0.12);
+  white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESUME PROMPT MODAL
+   ═══════════════════════════════════════════════════════════════════════════ */
+@keyframes resume-in {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+.resume-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 12px 32px;
+}
+
+.resume-card {
+  width: 100%;
+  max-width: 460px;
+  background: var(--clr-surface);
+  border-radius: var(--r-lg);
+  padding: var(--sp-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-md);
+  box-shadow: 0 -4px 40px rgba(0,0,0,0.25), var(--sh-lg);
+  animation: resume-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  text-align: center;
+}
+
+.resume-card__icon {
+  font-size: 4rem;
+  line-height: 1;
+  animation: float 2.5s ease-in-out infinite;
+}
+
+.resume-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.resume-card__eyebrow {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--clr-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.resume-card__title {
+  font-size: 1.7rem;
+  font-weight: 900;
+  color: var(--clr-text);
+  line-height: 1.1;
+}
+
+.resume-card__sub {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--clr-muted);
+}
+
+.resume-card__time {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--clr-accent);
+  margin-top: 4px;
+}
+
+.resume-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-sm);
+  width: 100%;
+}
+
+.resume-btn {
+  width: 100%;
+  padding: 14px 24px;
+  border-radius: var(--r-xl);
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
+}
+.resume-btn:active { transform: scale(0.96); }
+
+.resume-btn--primary {
+  background: var(--clr-primary);
+  color: #fff;
+  box-shadow: 0 6px 0 color-mix(in srgb, var(--clr-primary) 70%, #000),
+              var(--sh-sm);
+}
+.resume-btn--primary:hover  { filter: brightness(1.06); }
+.resume-btn--primary:active { box-shadow: 0 2px 0 color-mix(in srgb, var(--clr-primary) 70%, #000); }
+
+.resume-btn--ghost {
+  background: transparent;
+  color: var(--clr-muted);
+  border: 2px solid var(--clr-border);
+}
+.resume-btn--ghost:hover { background: var(--clr-bg); color: var(--clr-text); }
+
+.resume-card__hint {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--clr-green);
+  opacity: 0.85;
+}
+
+/* iOS overrides */
+.app-shell[data-ui-mode="ios"] .resume-card {
+  border-radius: 28px;
+  box-shadow: 0 -2px 30px rgba(0,0,0,0.15), var(--sh-lg);
+}
+.app-shell[data-ui-mode="ios"] .resume-btn--primary {
+  border-radius: 16px;
+  background: #007AFF;
+  box-shadow: 0 3px 12px rgba(0,122,255,0.35);
+}
+.app-shell[data-ui-mode="ios"] .resume-btn--primary:active {
+  box-shadow: 0 1px 4px rgba(0,122,255,0.2);
+}
+.app-shell[data-ui-mode="ios"] .resume-btn--ghost {
+  border-radius: 16px;
+  border-color: rgba(0,0,0,0.10);
+  color: #007AFF;
+}
+.app-shell[data-ui-mode="ios"] .resume-card__time { color: #FF9500; }
+
+/* Android overrides */
+.app-shell[data-ui-mode="android"] .resume-card {
+  border-radius: 16px;
+  border: 1.5px solid #CAC4D0;
+}
+.app-shell[data-ui-mode="android"] .resume-btn--primary {
+  border-radius: 28px;
+  background: #6750A4;
+  box-shadow: 0 2px 6px rgba(103,80,164,0.3);
+}
+.app-shell[data-ui-mode="android"] .resume-btn--primary:active {
+  box-shadow: none;
+}
+.app-shell[data-ui-mode="android"] .resume-btn--ghost {
+  border-radius: 28px;
+  border-color: #79747E;
+  color: #6750A4;
+}
+.app-shell[data-ui-mode="android"] .resume-card__time { color: #6750A4; }
+.app-shell[data-ui-mode="android"] .wm-autosave {
+  color: rgba(28,27,31,0.4);
+  border-color: rgba(0,0,0,0.10);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
    UI MODE TOGGLE COMPONENT
    ═══════════════════════════════════════════════════════════════════════════ */
 .ui-mode-toggle {

@@ -12,7 +12,7 @@
 import { createContext, useContext, useReducer, useEffect, useCallback, useRef } from 'react';
 import type { ReactNode } from 'react';
 import type {
-  AppState, Screen, Script, UiMode, UserProfile, AppProgress,
+  AppState, Screen, Script, UiMode, SavedGameState, UserProfile, AppProgress,
   MemoryScore, ShadowScore, WorldId, AppNotification, PlaySession,
 } from '../types';
 import {
@@ -34,6 +34,19 @@ const loadUiMode = (): UiMode => {
   try { return localStorage.getItem(UI_MODE_KEY) === 'android' ? 'android' : 'ios'; } catch { return 'ios'; }
 };
 
+const SAVED_GAME_KEY = 'pametnica_saved_game';
+const MODULE_SCREENS = new Set<Screen>(['memory', 'alphabet', 'shadow']);
+
+const loadSavedGameState = (): SavedGameState | null => {
+  try {
+    const raw = localStorage.getItem(SAVED_GAME_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as SavedGameState;
+    if (MODULE_SCREENS.has(parsed.screen) && parsed.savedAt) return parsed;
+    return null;
+  } catch { return null; }
+};
+
 // ─── Actions ──────────────────────────────────────────────────────────────────
 type Action =
   | { type: 'INIT'; profile: UserProfile; progress: AppProgress }
@@ -45,6 +58,8 @@ type Action =
   | { type: 'UPDATE_SESSION'; session: PlaySession }
   | { type: 'SET_SCRIPT'; script: Script }
   | { type: 'SET_UI_MODE'; uiMode: UiMode }
+  | { type: 'SET_SAVED_GAME'; savedGameState: SavedGameState }
+  | { type: 'CLEAR_SAVED_GAME' }
   | { type: 'RESET' };
 
 const EMPTY_WORLDS = computeWorlds(createDefaultProgress('__empty'));
@@ -58,6 +73,7 @@ const INITIAL: AppState = {
   activeSession: null,
   script: loadScript(),
   uiMode: loadUiMode(),
+  savedGameState: loadSavedGameState(),
 };
 
 const reducer = (state: AppState, action: Action): AppState => {
@@ -94,6 +110,10 @@ const reducer = (state: AppState, action: Action): AppState => {
       return { ...state, script: action.script };
     case 'SET_UI_MODE':
       return { ...state, uiMode: action.uiMode };
+    case 'SET_SAVED_GAME':
+      return { ...state, savedGameState: action.savedGameState };
+    case 'CLEAR_SAVED_GAME':
+      return { ...state, savedGameState: null };
     case 'RESET':
       return INITIAL;
     default:
@@ -191,6 +211,17 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   // ── Public API ────────────────────────────────────────────────────────────
   const navigate = useCallback((screen: Screen) => {
     dispatch({ type: 'NAVIGATE', screen });
+    if (MODULE_SCREENS.has(screen)) {
+      const gs: SavedGameState = {
+        screen: screen as SavedGameState['screen'],
+        savedAt: new Date().toISOString(),
+      };
+      try { localStorage.setItem(SAVED_GAME_KEY, JSON.stringify(gs)); } catch {}
+      dispatch({ type: 'SET_SAVED_GAME', savedGameState: gs });
+    } else {
+      try { localStorage.removeItem(SAVED_GAME_KEY); } catch {}
+      dispatch({ type: 'CLEAR_SAVED_GAME' });
+    }
   }, []);
 
   const createProfile = useCallback((name: string, avatarIndex: number) => {
