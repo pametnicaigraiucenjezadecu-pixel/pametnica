@@ -3,7 +3,6 @@ import { useApp } from '../context/AppContext';
 import { isSoundEnabled, toggleSound } from '../services/speech';
 import { t } from '../data/translations';
 import { useScript } from '../hooks/useScript';
-import { UiModeToggle } from '../components/UiModeToggle';
 import { ResumePrompt } from '../components/ResumePrompt';
 import type { WorldStatus, WorldId } from '../types';
 
@@ -162,7 +161,6 @@ export const WorldMapScreen: React.FC = () => {
             onClick={() => setScript('cyrillic')}
           >Ћир</button>
         </div>
-        <UiModeToggle />
         <button className="sound-toggle" onClick={handleToggleSound} title={soundOn ? 'Isključi zvuk' : 'Uključi zvuk'}>
           {soundOn ? t.soundOn : t.soundOff}
         </button>

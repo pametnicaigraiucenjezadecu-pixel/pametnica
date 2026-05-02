@@ -20,7 +20,9 @@
       "Bash(git credential-manager-core *)",
       "Bash(git push *)",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(powershell -Command \"\\(Get-Content src\\\\index.css\\).Count\")",
+      "Bash(Remove-Item \"C:\\\\Users\\\\PC\\\\Desktop\\\\Interaktivna aplikacija za decu\\\\src\\\\components\\\\UiModeToggle.tsx\" -Force)"
     ],
     "additionalDirectories": [
       "c:\\Users\\PC\\Desktop\\Vexquara bot\\frontend",

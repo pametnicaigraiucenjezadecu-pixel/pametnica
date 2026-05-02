@@ -1,9 +1,6 @@
 // ─── Script ───────────────────────────────────────────────────────────────────
 export type Script = 'latin' | 'cyrillic';
 
-// ─── UI Mode ──────────────────────────────────────────────────────────────────
-export type UiMode = 'ios' | 'android';
-
 // ─── Saved Game State (for Resume prompt) ────────────────────────────────────
 export interface SavedGameState {
   screen: 'memory' | 'alphabet' | 'shadow';
@@ -167,8 +164,6 @@ export interface AppState {
   activeSession: PlaySession | null;
   /** Display script: Latin or Cyrillic */
   script: Script;
-  /** Visual theme: iOS or Android */
-  uiMode: UiMode;
   /** Interrupted game to offer Resume for */
   savedGameState: SavedGameState | null;
 }

@@ -30,16 +30,13 @@ const Router: React.FC = () => {
   return <div key={key} className="route-wrapper">{screen}</div>;
 };
 
-// Separate component so it can read uiMode from context
-const AppShell: React.FC = () => {
-  const { state } = useApp();
-  return (
-    <div className="app-shell" data-ui-mode={state.uiMode}>
-      <Router />
-      <InstallPrompt />
-    </div>
-  );
-};
+// Separate component so it can read savedGameState from context
+const AppShell: React.FC = () => (
+  <div className="app-shell">
+    <Router />
+    <InstallPrompt />
+  </div>
+);
 
 const App: React.FC = () => (
   <AppProvider>
