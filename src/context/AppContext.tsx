@@ -12,7 +12,7 @@
 import { createContext, useContext, useReducer, useEffect, useCallback, useRef } from 'react';
 import type { ReactNode } from 'react';
 import type {
-  AppState, Screen, Script, UserProfile, AppProgress,
+  AppState, Screen, Script, UiMode, UserProfile, AppProgress,
   MemoryScore, ShadowScore, WorldId, AppNotification, PlaySession,
 } from '../types';
 import {
@@ -29,6 +29,11 @@ const loadScript = (): Script => {
   try { return localStorage.getItem(SCRIPT_KEY) === 'cyrillic' ? 'cyrillic' : 'latin'; } catch { return 'latin'; }
 };
 
+const UI_MODE_KEY = 'pametnica_ui_mode';
+const loadUiMode = (): UiMode => {
+  try { return localStorage.getItem(UI_MODE_KEY) === 'android' ? 'android' : 'ios'; } catch { return 'ios'; }
+};
+
 // ─── Actions ──────────────────────────────────────────────────────────────────
 type Action =
   | { type: 'INIT'; profile: UserProfile; progress: AppProgress }
@@ -39,6 +44,7 @@ type Action =
   | { type: 'START_SESSION'; session: PlaySession }
   | { type: 'UPDATE_SESSION'; session: PlaySession }
   | { type: 'SET_SCRIPT'; script: Script }
+  | { type: 'SET_UI_MODE'; uiMode: UiMode }
   | { type: 'RESET' };
 
 const EMPTY_WORLDS = computeWorlds(createDefaultProgress('__empty'));
@@ -51,6 +57,7 @@ const INITIAL: AppState = {
   notifications: [],
   activeSession: null,
   script: loadScript(),
+  uiMode: loadUiMode(),
 };
 
 const reducer = (state: AppState, action: Action): AppState => {
@@ -85,6 +92,8 @@ const reducer = (state: AppState, action: Action): AppState => {
       return { ...state, activeSession: action.session };
     case 'SET_SCRIPT':
       return { ...state, script: action.script };
+    case 'SET_UI_MODE':
+      return { ...state, uiMode: action.uiMode };
     case 'RESET':
       return INITIAL;
     default:
@@ -105,6 +114,7 @@ interface GameStore {
   endCurrentSession: () => void;
   dismissNotification: (id: string) => void;
   setScript: (script: Script) => void;
+  setUiMode: (uiMode: UiMode) => void;
 }
 
 const Ctx = createContext<GameStore | null>(null);
@@ -293,6 +303,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     try { localStorage.setItem(SCRIPT_KEY, script); } catch {}
   }, []);
 
+  const setUiMode = useCallback((uiMode: UiMode) => {
+    dispatch({ type: 'SET_UI_MODE', uiMode });
+    try { localStorage.setItem(UI_MODE_KEY, uiMode); } catch {}
+  }, []);
+
   return (
     <Ctx.Provider value={{
       state, navigate,
@@ -300,7 +315,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       saveMemoryScore, saveShadowScore,
       learnLetter, trackModule,
       endCurrentSession, dismissNotification,
-      setScript,
+      setScript, setUiMode,
     }}>
       {children}
     </Ctx.Provider>

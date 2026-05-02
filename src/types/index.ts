@@ -1,6 +1,9 @@
 // ─── Script ───────────────────────────────────────────────────────────────────
 export type Script = 'latin' | 'cyrillic';
 
+// ─── UI Mode ──────────────────────────────────────────────────────────────────
+export type UiMode = 'ios' | 'android';
+
 // ─── Navigation ───────────────────────────────────────────────────────────────
 export type Screen =
   | 'home'
@@ -158,4 +161,6 @@ export interface AppState {
   activeSession: PlaySession | null;
   /** Display script: Latin or Cyrillic */
   script: Script;
+  /** Visual theme: iOS or Android */
+  uiMode: UiMode;
 }

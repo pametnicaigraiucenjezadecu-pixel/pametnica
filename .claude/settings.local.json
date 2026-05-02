@@ -18,7 +18,9 @@
       "Bash(git config *)",
       "Bash(git credential-manager *)",
       "Bash(git credential-manager-core *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
     ],
     "additionalDirectories": [
       "c:\\Users\\PC\\Desktop\\Vexquara bot\\frontend",
