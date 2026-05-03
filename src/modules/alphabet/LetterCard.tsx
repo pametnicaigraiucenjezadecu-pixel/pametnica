@@ -4,6 +4,8 @@ import { speakSr } from '../../services/speech';
 import { playSound } from '../../services/audio';
 import { t } from '../../data/translations';
 import { useScript } from '../../hooks/useScript';
+import { useApp } from '../../context/AppContext';
+import { toLatin } from '../../utils/transliterate';
 
 interface LetterCardProps {
   item: AlphabetItem;
@@ -12,13 +14,16 @@ interface LetterCardProps {
 }
 
 export const LetterCard: React.FC<LetterCardProps> = ({ item, isLearned, onClick }) => {
+  const { state } = useApp();
+  const displayLetter = state.script === 'cyrillic' ? item.letter : toLatin(item.letter);
+
   return (
     <button
       className={`letter-tile ${isLearned ? 'letter-tile--learned' : ''}`}
       onClick={onClick}
       aria-label={`Slovo ${item.letter} za ${item.word}`}
     >
-      <span className="letter-tile__letter">{item.letter}</span>
+      <span className="letter-tile__letter">{displayLetter}</span>
       {isLearned && <span className="letter-tile__check">✓</span>}
     </button>
   );
@@ -34,8 +39,10 @@ interface LetterFocusProps {
 
 export const LetterFocusCard: React.FC<LetterFocusProps> = ({ item, isLearned, onLearn, onClose }) => {
   const s = useScript();
+  const { state } = useApp();
   // Digraphs Lj, Nj, Dž occupy 2 chars — must highlight both together
   const digraphLen = /^(?:Lj|LJ|lj|Nj|NJ|nj|Dž|DŽ|dž)/.test(item.word) ? 2 : 1;
+  const displayLetter = state.script === 'cyrillic' ? item.letter : toLatin(item.letter);
 
   const handleSpeak = () => {
     speakSr(t.letterPhrase(item.phoneme, item.word));
@@ -45,8 +52,7 @@ export const LetterFocusCard: React.FC<LetterFocusProps> = ({ item, isLearned, o
   return (
     <div className="letter-focus-overlay" onClick={onClose}>
       <div className="letter-focus" onClick={e => e.stopPropagation()}>
-        {/* The letter itself is NEVER transliterated — it IS the lesson subject */}
-        <div className="letter-focus__letter">{item.letter}</div>
+        <div className="letter-focus__letter">{displayLetter}</div>
         <div className="letter-focus__emoji">{item.emoji}</div>
         <div className="letter-focus__word">
           <span className="letter-focus__highlight">{s(item.word.slice(0, digraphLen))}</span>

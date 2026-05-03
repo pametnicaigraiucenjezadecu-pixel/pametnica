@@ -6,6 +6,7 @@ import { Button } from '../../components/ui/Button';
 import { speakSr } from '../../services/speech';
 import { t } from '../../data/translations';
 import { useScript } from '../../hooks/useScript';
+import { toLatin } from '../../utils/transliterate';
 import type { AlphabetItem } from '../../types';
 
 export const AlphabetModule: React.FC = () => {
@@ -56,7 +57,7 @@ export const AlphabetModule: React.FC = () => {
       {/* Just-learned toast */}
       {justLearned && (
         <div className="toast toast--success">
-          {s(t.toastLearned(justLearned))}
+          {s(t.toastLearned(state.script === 'cyrillic' ? justLearned : toLatin(justLearned)))}
         </div>
       )}
 
