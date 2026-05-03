@@ -6,7 +6,6 @@ import { Modal } from '../../components/ui/Modal';
 import { useApp } from '../../context/AppContext';
 import { useTimer } from '../../hooks/useTimer';
 import { playSound } from '../../services/audio';
-import { speakSr } from '../../services/speech';
 import { ALL_MEMORY_CARDS, DIFFICULTY_CONFIG, STAR_THRESHOLDS } from '../../data/memoryCards';
 import { t } from '../../data/translations';
 import { useScript } from '../../hooks/useScript';
@@ -79,9 +78,6 @@ export const MemoryGame: React.FC = () => {
     if (isChecking || flippedIds.length >= 2) return;
 
     playSound('flip');
-
-    const clickedCard = cards.find(c => c.instanceId === instanceId)!;
-    speakSr(clickedCard.cardData.name);
 
     setCards(prev =>
       prev.map(c => c.instanceId === instanceId ? { ...c, isFlipped: true } : c)

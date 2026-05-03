@@ -47,7 +47,6 @@ export const t = {
   alphabetTagline:  (script: string) =>
     script === 'cyrillic' ? 'Nauči azbuku!' : 'Nauči abecedu!',
   alphabetProgress: (n: number) => `${n} / 30 slova naučeno ⭐`,
-  btnHear: '🔊 Čuj slovo!',
   btnLearned: '✅ Naučio/la sam!',
   learnedBadge: '🌟 Naučeno! +1 ⭐',
   // script-aware completion banner
@@ -56,7 +55,6 @@ export const t = {
       ? '🎉 Sjajno! Znaš svu azbuku! 🎉'
       : '🎉 Sjajno! Znaš celu abecedu! 🎉',
   toastLearned: (letter: string) => `🌟 Naučio/la si slovo ${letter}! +1 zvezda!`,
-  letterPhrase: (phoneme: string, word: string) => `${phoneme}. Reč je ${word}`,
 
   // ── Shadow match
   shadowTitle: '🌑 Igra senki',
@@ -66,8 +64,6 @@ export const t = {
   shadowWrong: '❌ Pokušaj ponovo!',
   shadowDoneTitle: 'Sve urađeno!',
   shadowAccuracy: (n: number) => `Tačnost: ${n}%`,
-  shadowSpeakCorrect: (name: string) => `Bravo! ${name}!`,
-  shadowSpeakWrong: (name: string) => `Pokušaj ponovo! Traži ${name}`,
 
   // ── Progress screen
   progressTitle: '🏆 Moj napredak',

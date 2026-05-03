@@ -4,7 +4,6 @@ import { useApp } from '../../context/AppContext';
 import { Button } from '../../components/ui/Button';
 import { StarDisplay } from '../../components/ui/StarDisplay';
 import { playSound } from '../../services/audio';
-import { speakSr } from '../../services/speech';
 import { t } from '../../data/translations';
 import { useScript } from '../../hooks/useScript';
 import type { ShadowItem } from '../../types';
@@ -46,12 +45,10 @@ export const ShadowMatch: React.FC = () => {
     const isCorrect = item.id === level.target.id;
     if (isCorrect) {
       playSound('correct');
-      speakSr(t.shadowSpeakCorrect(level.target.name));
       setCorrectCount(c => c + 1);
       setRoundState('correct');
     } else {
       playSound('wrong');
-      speakSr(t.shadowSpeakWrong(level.target.name));
       setRoundState('wrong');
     }
 

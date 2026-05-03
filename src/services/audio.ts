@@ -1,6 +1,3 @@
-// ─── Web Speech API — re-export so callers don't need two imports ─────────────
-export { speakSr as speak } from './speech';
-
 import { isSoundEnabled } from './speech';
 
 // ─── Sound Types ──────────────────────────────────────────────────────────────

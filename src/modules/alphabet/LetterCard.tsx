@@ -1,7 +1,5 @@
 import React from 'react';
 import type { AlphabetItem } from '../../types';
-import { speakSr } from '../../services/speech';
-import { playSound } from '../../services/audio';
 import { t } from '../../data/translations';
 import { useScript } from '../../hooks/useScript';
 import { useApp } from '../../context/AppContext';
@@ -44,11 +42,6 @@ export const LetterFocusCard: React.FC<LetterFocusProps> = ({ item, isLearned, o
   const digraphLen = /^(?:Lj|LJ|lj|Nj|NJ|nj|Dž|DŽ|dž)/.test(item.word) ? 2 : 1;
   const displayLetter = state.script === 'cyrillic' ? item.letter : toLatin(item.letter);
 
-  const handleSpeak = () => {
-    speakSr(t.letterPhrase(item.phoneme, item.word));
-    playSound('click');
-  };
-
   return (
     <div className="letter-focus-overlay" onClick={onClose}>
       <div className="letter-focus" onClick={e => e.stopPropagation()}>
@@ -58,10 +51,6 @@ export const LetterFocusCard: React.FC<LetterFocusProps> = ({ item, isLearned, o
           <span className="letter-focus__highlight">{s(item.word.slice(0, digraphLen))}</span>
           {s(item.word.slice(digraphLen))}
         </div>
-
-        <button className="speak-btn" onClick={handleSpeak} aria-label="Čuj izgovor">
-          {s(t.btnHear)}
-        </button>
 
         {!isLearned ? (
           <button className="learn-btn" onClick={onLearn}>

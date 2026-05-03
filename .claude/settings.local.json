@@ -30,7 +30,8 @@
       "Bash(Select-String -Pattern \"Shadow\")",
       "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\PC\\\\Desktop\\\\Interaktivna aplikacija za decu\\\\src\\\\modules\\\\shadow\\\\\" -Force)",
       "Bash(dir /s /b *.tsx)",
-      "Bash(del \"c:\\\\Users\\\\PC\\\\Desktop\\\\Interaktivna aplikacija za decu\\\\src\\\\screens\\\\ModuleSelectScreen.tsx\")"
+      "Bash(del \"c:\\\\Users\\\\PC\\\\Desktop\\\\Interaktivna aplikacija za decu\\\\src\\\\screens\\\\ModuleSelectScreen.tsx\")",
+      "Bash(del \"c:\\\\Users\\\\PC\\\\Desktop\\\\Interaktivna aplikacija za decu\\\\src\\\\hooks\\\\useAudio.ts\")"
     ],
     "additionalDirectories": [
       "c:\\Users\\PC\\Desktop\\Vexquara bot\\frontend",

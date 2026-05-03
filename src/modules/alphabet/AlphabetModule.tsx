@@ -3,7 +3,6 @@ import { ALPHABET_DATA } from '../../data/alphabet';
 import { useApp } from '../../context/AppContext';
 import { LetterCard, LetterFocusCard } from './LetterCard';
 import { Button } from '../../components/ui/Button';
-import { speakSr } from '../../services/speech';
 import { t } from '../../data/translations';
 import { useScript } from '../../hooks/useScript';
 import { toLatin } from '../../utils/transliterate';
@@ -21,7 +20,6 @@ export const AlphabetModule: React.FC = () => {
   const learnedCount = learned.length;
 
   const handleTileClick = (item: AlphabetItem) => {
-    speakSr(item.phoneme);
     setFocused(item);
   };
 
