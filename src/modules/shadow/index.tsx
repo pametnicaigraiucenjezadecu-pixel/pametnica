@@ -3,8 +3,6 @@ import { SHADOW_LEVELS } from '../../data/shadowItems';
 import { useApp } from '../../context/AppContext';
 import { Button } from '../../components/ui/Button';
 import { StarDisplay } from '../../components/ui/StarDisplay';
-import { SvgSilhouette } from '../../components/SvgSilhouette';
-import type { ShadowId } from '../../components/SvgSilhouette';
 import { playSound } from '../../services/audio';
 import { speakSr } from '../../services/speech';
 import { t } from '../../data/translations';
@@ -12,6 +10,17 @@ import { useScript } from '../../hooks/useScript';
 import type { ShadowItem } from '../../types';
 
 type RoundState = 'playing' | 'correct' | 'wrong';
+
+const getValidLevel = (index: number) => {
+  const level = SHADOW_LEVELS[index];
+  const ids = level.options.map(o => o.id);
+  const valid = ids.includes(level.target.id) && new Set(ids).size === ids.length;
+  if (!valid) console.warn(`Shadow level ${index + 1} failed validation — check shadowItems.ts`);
+  return level;
+};
+
+const shuffleOptions = (index: number) =>
+  [...getValidLevel(index).options].sort(() => Math.random() - 0.5);
 
 export const ShadowMatch: React.FC = () => {
   const { navigate, saveShadowScore, trackModule } = useApp();
@@ -24,7 +33,7 @@ export const ShadowMatch: React.FC = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [finished, setFinished] = useState(false);
   const [shuffledOptions, setShuffledOptions] = useState<ShadowItem[]>(() =>
-    [...SHADOW_LEVELS[0].options].sort(() => Math.random() - 0.5)
+    shuffleOptions(0)
   );
 
   const level = SHADOW_LEVELS[currentIndex];
@@ -49,20 +58,20 @@ export const ShadowMatch: React.FC = () => {
     setTimeout(() => {
       if (isCorrect) {
         if (currentIndex + 1 >= SHADOW_LEVELS.length) {
-          playSound('complete');
+          playSound('level_complete');
           const acc = Math.round(((correctCount + 1) / (totalCount + 1)) * 100);
           const stars = acc >= 90 ? 3 : acc >= 70 ? 2 : 1;
           saveShadowScore({ level: SHADOW_LEVELS.length, accuracy: acc, stars });
           setFinished(true);
         } else {
-          const nextLevel = SHADOW_LEVELS[currentIndex + 1];
-          setCurrentIndex(i => i + 1);
-          setShuffledOptions([...nextLevel.options].sort(() => Math.random() - 0.5));
+          const nextIndex = currentIndex + 1;
+          setCurrentIndex(nextIndex);
+          setShuffledOptions(shuffleOptions(nextIndex));
           setRoundState('playing');
           setSelectedId(null);
         }
       } else {
-        setShuffledOptions(prev => [...prev].sort(() => Math.random() - 0.5));
+        setShuffledOptions(shuffleOptions(currentIndex));
         setRoundState('playing');
         setSelectedId(null);
       }
@@ -76,7 +85,7 @@ export const ShadowMatch: React.FC = () => {
     setCorrectCount(0);
     setTotalCount(0);
     setFinished(false);
-    setShuffledOptions([...SHADOW_LEVELS[0].options].sort(() => Math.random() - 0.5));
+    setShuffledOptions(shuffleOptions(0));
   };
 
   const accuracy = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : 0;
@@ -157,7 +166,7 @@ export const ShadowMatch: React.FC = () => {
               disabled={roundState !== 'playing'}
               aria-label={s(item.name)}
             >
-              <SvgSilhouette id={item.id as ShadowId} />
+              <span className="shadow-option__emoji">{item.emoji}</span>
             </button>
           );
         })}

@@ -34,12 +34,6 @@ const WORLD_META: Record<WorldId, Pick<WorldStatus, 'id'|'name'|'tagline'|'emoji
   },
 };
 
-// ─── Unlock thresholds ────────────────────────────────────────────────────────
-const UNLOCK = {
-  alphabet: (p: AppProgress) => p.memoryScores.length >= 1,
-  shadow:   (p: AppProgress) => p.alphabetProgress.learnedLetters.length >= 5,
-};
-
 const COMPLETE = {
   memory:   (p: AppProgress) => p.memoryScores.reduce((a, s) => a + s.stars, 0) >= 9,
   alphabet: (p: AppProgress) => p.alphabetProgress.learnedLetters.length >= 30,
@@ -60,9 +54,9 @@ export const computeWorlds = (progress: AppProgress): WorldStatus[] => {
 
   const ORDER: WorldId[] = ['memory', 'alphabet', 'shadow'];
 
-  return ORDER.map((id, i) => ({
+  return ORDER.map((id) => ({
     ...WORLD_META[id],
-    unlocked:    i === 0 ? true : UNLOCK[id as 'alphabet' | 'shadow'](progress),
+    unlocked:    true,
     completed:   COMPLETE[id](progress),
     starsEarned: earned[id],
   }));

@@ -2,7 +2,7 @@
 export { speakSr as speak } from './speech';
 
 // ─── Web Audio API — sound effects ────────────────────────────────────────────
-type SoundType = 'correct' | 'wrong' | 'complete' | 'flip' | 'click';
+type SoundType = 'correct' | 'wrong' | 'complete' | 'flip' | 'click' | 'level_complete';
 
 let _audioCtx: AudioContext | null = null;
 
@@ -55,23 +55,30 @@ export const playSound = (type: SoundType): void => {
       break;
 
     case 'correct':
-      tone(ctx, 523, 0,    0.12); // C5
-      tone(ctx, 659, 0.12, 0.12); // E5
-      tone(ctx, 784, 0.24, 0.18); // G5
+      // Cartoon "ding ding!" — quick bright arpeggio, triangle = toy-like
+      tone(ctx, 523,  0,    0.07, 'triangle', 0.28); // C5
+      tone(ctx, 659,  0.06, 0.07, 'triangle', 0.26); // E5
+      tone(ctx, 784,  0.12, 0.07, 'triangle', 0.24); // G5
+      tone(ctx, 1047, 0.18, 0.22, 'triangle', 0.32); // C6 — held
       break;
 
     case 'wrong':
-      tone(ctx, 300, 0,    0.10, 'sawtooth', 0.2);
-      tone(ctx, 240, 0.10, 0.18, 'sawtooth', 0.15);
+      // Gentle "uh-oh" — soft descending, no harsh buzzer for kids
+      tone(ctx, 392, 0,    0.12, 'triangle', 0.18); // G4
+      tone(ctx, 330, 0.10, 0.20, 'triangle', 0.13); // E4
       break;
 
     case 'complete':
-      tone(ctx, 523,  0,    0.10); // C5
-      tone(ctx, 659,  0.10, 0.10); // E5
-      tone(ctx, 784,  0.20, 0.10); // G5
-      tone(ctx, 1047, 0.30, 0.35); // C6
-      tone(ctx, 784,  0.35, 0.10); // G5 (echo)
-      tone(ctx, 1047, 0.45, 0.45); // C6 (long)
+    case 'level_complete':
+      // Grand cartoon fanfare
+      tone(ctx, 523,  0,    0.09, 'triangle', 0.30); // C5
+      tone(ctx, 659,  0.08, 0.09, 'triangle', 0.28); // E5
+      tone(ctx, 784,  0.16, 0.09, 'triangle', 0.28); // G5
+      tone(ctx, 1047, 0.24, 0.12, 'triangle', 0.32); // C6
+      tone(ctx, 784,  0.34, 0.07, 'triangle', 0.24); // G5 bounce
+      tone(ctx, 1047, 0.40, 0.10, 'triangle', 0.32); // C6
+      tone(ctx, 1319, 0.48, 0.55, 'triangle', 0.35); // E6 final
+      tone(ctx, 523,  0.24, 0.45, 'sine',     0.14); // bass C5
       break;
   }
 };

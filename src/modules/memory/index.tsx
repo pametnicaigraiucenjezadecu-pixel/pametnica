@@ -134,7 +134,7 @@ export const MemoryGame: React.FC = () => {
   // ─── Detect win ──────────────────────────────────────────────────────────
   useEffect(() => {
     if (gameState === 'playing' && matchedCount === pairs && pairs > 0) {
-      playSound('complete');
+      playSound('level_complete');
       const earnedStars = calcStars(moves, difficulty);
       setStars(earnedStars);
       saveMemoryScore({ difficulty, moves, timeSeconds: seconds, stars: earnedStars });

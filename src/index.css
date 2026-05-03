@@ -880,18 +880,24 @@ input  { font-family: inherit; }
   animation: shake 0.4s ease;
 }
 
-.shadow-option__emoji { font-size: 3.5rem; }
-
-/* SVG silhouette — fills with currentColor so CSS can control the shade */
-.shadow-silhouette-svg {
-  width: 70%;
-  height: 70%;
-  color: #3d3d5c;
-  transition: color 0.2s ease;
+/* Emoji silhouette — brightness(0) = black shape, reveal color on correct */
+.shadow-option__emoji {
+  font-size: clamp(2.8rem, 9vw, 4rem);
+  display: block;
+  filter: brightness(0);
+  transition: filter 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+  user-select: none;
 }
 
-.shadow-option--correct .shadow-silhouette-svg { color: #00b894; }
-.shadow-option--wrong   .shadow-silhouette-svg { color: #d63031; }
+.shadow-option--correct .shadow-option__emoji {
+  filter: none;
+  transform: scale(1.18);
+}
+
+.shadow-option--wrong .shadow-option__emoji {
+  filter: brightness(0) sepia(1) saturate(6) hue-rotate(320deg);
+}
 
 /* ═══════════════════════════════════════════════════════════════════════════
    PROGRESS SCREEN
