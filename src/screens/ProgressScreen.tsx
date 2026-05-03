@@ -53,14 +53,14 @@ export const ProgressScreen: React.FC = () => {
       {/* Module summaries */}
       <div className="progress-modules">
         <div className="progress-stat-card" style={{ '--accent': '#A29BFE' } as React.CSSProperties}>
-          <span className="progress-stat-card__icon">🔤</span>
+          <span className="progress-stat-card__icon">🔡</span>
           <div>
             <p className="progress-stat-card__title">{s(t.progressAlphabet)}</p>
             <p className="progress-stat-card__value">{s(t.progressLetters(lettersLearned))}</p>
             <div className="progress-bar">
               <div
                 className="progress-bar__fill"
-                style={{ width: `${(lettersLearned / 26) * 100}%`, background: '#A29BFE' }}
+                style={{ width: `${(lettersLearned / 30) * 100}%`, background: '#A29BFE' }}
               />
             </div>
           </div>

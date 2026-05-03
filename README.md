@@ -1,182 +1,134 @@
-# KidLearn — Educational Game Platform for Children (5–7)
+# Pametnica — Edukativna aplikacija za djecu
 
-Interactive educational app built with React 19 + Vite 8 + TypeScript 6.
-Teaches letters, memory, and visual perception through game-based learning.
+Interaktivna web aplikacija za učenje srpskog pisma.  
+Namijenjena djeci uzrasta **5 godina**.
 
 ---
 
-## ⚡ Quick Start (Windows)
+## Šta je Pametnica?
 
-**Option A — double-click (easiest):**
-```
-Double-click  start.bat
-```
+Pametnica je edukativna igra koja pomaže djeci da uče:
 
-**Option B — terminal (Command Prompt or PowerShell):**
-```bat
-cd "C:\Users\PC\Desktop\Interaktivna aplikacija za decu\edu-kids"
+- **Srpsku azbuku** — sva 30 slova ćirilice (А–Ш)
+- **Pamćenje** — igra okretanja karata (sparivanje parova)
+- **Igra senki** — prepoznavanje silueta predmeta
+
+Sve je na srpskom jeziku. Nema engleskog. Nema instalacije.
+
+---
+
+## Kome je namijenjena?
+
+| | |
+|---|---|
+| **Uzrast** | 5 godina (predškolski uzrast) |
+| **Jezik** | Srpski (ekavica) |
+| **Pismo** | Ćirilica (podrazumijevano) + latinica (prebacivo) |
+| **Uređaj** | Mobilni telefon, tablet, računar |
+
+---
+
+## Kako se koristi — korak po korak
+
+**1. Pokreni aplikaciju**
+```
 npm install
 npm run dev
 ```
+Otvori: `http://localhost:5173`
 
-Then open: **http://localhost:5173**
+**2. Unesi ime i izaberi avatar**
+- Dijete upiše svoje ime
+- Izabere omiljeni avatar (mačka, pas, zec...)
+- Pritisne "Igraj!"
 
-> ⚠️ IMPORTANT: Always run commands from inside the `edu-kids\` folder.
-> If you get `ENOENT: package.json not found`, you are in the wrong folder.
+**3. Izaberi igru**
+
+| Igra | Opis |
+|------|------|
+| 🧠 Igra pamćenja | Okreni kartice, pronađi par |
+| 🔡 Azbuka | Uči slova ćirilice, čuj izgovor |
+| 🌑 Igra senki | Pronađi pravu siluetu |
+
+**4. Skupljaj zvjezdice ⭐ i značke 🏆**
 
 ---
 
-## 📦 Commands
-
-| Command | What it does |
-|---------|--------------|
-| `npm install` | Install dependencies (run once) |
-| `npm run dev` | Dev server at http://localhost:5173 |
-| `npm run build` | Production bundle → `dist/` |
-| `npm run preview` | Preview production build |
-
----
-
-## 🏗 Architecture
+## Azbuka — 30 slova
 
 ```
-edu-kids/
-├── src/
-│   │
-│   ├── core/                  ← Business logic (framework-independent)
-│   │   ├── GameStore.tsx      ← Single source of truth (React Context)
-│   │   ├── ProgressEngine.ts  ← Badge unlock rules (pure functions)
-│   │   ├── UnlockEngine.ts    ← World progression rules (pure functions)
-│   │   ├── SessionEngine.ts   ← Play session + daily streak
-│   │   ├── StorageService.ts  ← localStorage I/O
-│   │   └── index.ts           ← Public barrel: import from '@core'
-│   │
-│   ├── modules/               ← Self-contained game modules
-│   │   ├── alphabet/          ← AlphabetModule — A to Z with speech
-│   │   │   ├── AlphabetModule.tsx
-│   │   │   └── LetterCard.tsx
-│   │   ├── memory/            ← MemoryGame — 3D card matching
-│   │   │   ├── MemoryGame.tsx
-│   │   │   └── MemoryCard.tsx
-│   │   ├── shadow/            ← ShadowMatch — silhouette recognition
-│   │   │   └── ShadowMatch.tsx
-│   │   └── index.ts           ← Public barrel: import from '@modules'
-│   │
-│   ├── ui/                    ← Presentation layer
-│   │   ├── components/        ← Button, Modal, StarDisplay
-│   │   │   └── index.ts       ← import from '@ui/components'
-│   │   └── screens/           ← HomeScreen, WorldMapScreen, etc.
-│   │       └── index.ts       ← import from '@ui/screens'
-│   │
-│   ├── data/                  ← Static game content
-│   │   ├── alphabet.ts        ← 26 letters with emoji + phonemes
-│   │   ├── memoryCards.ts     ← Card sets + difficulty config
-│   │   └── shadowItems.ts     ← 9 shadow matching levels
-│   │
-│   ├── hooks/                 ← Custom React hooks
-│   │   ├── useAudio.ts
-│   │   └── useTimer.ts
-│   │
-│   ├── services/              ← External API wrappers
-│   │   ├── audio.ts           ← Web Speech API + Web Audio API
-│   │   ├── storage.ts         ← localStorage implementation
-│   │   ├── worlds.ts          ← World unlock computation
-│   │   └── session.ts         ← Session/streak implementation
-│   │
-│   ├── types/index.ts         ← All TypeScript interfaces
-│   ├── App.tsx                ← Root + state-based router
-│   ├── main.tsx               ← React entry point
-│   └── index.css              ← Global design system + animations
-│
-├── dist/                      ← Production build (copy anywhere)
-├── start.bat                  ← Windows one-click launcher
-├── build.bat                  ← Windows one-click build
-└── package.json
+А Б В Г Д Ђ Е Ж З И Ј К Л Љ М Н Њ О П Р С Т Ћ У Ф Х Ц Ч Џ Ш
 ```
 
----
+Svako slovo ima:
+- Primjer riječi (Avion, Buba, Voz...)
+- Odgovarajući emoji
+- Izgovor (Web Speech API)
 
-## 🎮 Game Modules
-
-### 🧠 Memory World
-- 3D CSS card flip animation
-- 3 difficulty levels: Easy (4 pairs), Medium (6 pairs), Hard (8 pairs)
-- Move counter + live timer
-- 1–3 star scoring based on moves
-
-### 🔤 Letter Land
-- Full A–Z grid (26 letters)
-- Click any letter → focus card with emoji illustration
-- 🔊 Web Speech API pronunciation (no audio files needed)
-- Track learned letters — earn 1 star per letter
-
-### 🌑 Shadow Realm
-- 9 progressive difficulty levels
-- CSS `filter: brightness(0)` creates silhouettes (no image files!)
-- Accuracy-based 1–3 star rating
+Prekidač **Ћир / Lat** mijenja pismo za cijelu aplikaciju.
 
 ---
 
-## 🔓 Progression & Unlock System
+## Zvuk i govor
 
-| World | Status |
-|-------|--------|
-| 🧠 Memory World | Always available |
-| 🔤 Letter Land | Unlocks after completing 1 Memory game |
-| 🌑 Shadow Realm | Unlocks after learning 5 letters |
-
-Badges (9 total): Memory Master, ABC Hero, Shadow Hunter, Star Collector,
-Superstar, Perfect Match, 3-Day Streak, Explorer, Shadow Walker.
+- Zvučni efekti — Web Audio API (bez audio fajlova)
+- Govor — Web Speech API, srpski glas (sr-RS)
+- Dugme 🔊/🔇 isključuje/uključuje zvuk
 
 ---
 
-## 💾 Data Storage
+## Čuvanje podataka
 
-All data saved in browser `localStorage` — no backend, works offline.
+Sve se čuva automatski u browseru (localStorage).  
+Nema servera, radi bez interneta.
 
-| Key | Contents |
-|-----|---------|
-| `kidlearn_profile` | Child name + avatar index |
-| `kidlearn_progress` | Stars, badges, scores, sessions, streak |
+| Ključ | Sadržaj |
+|-------|---------|
+| `kidlearn_profile` | Ime + avatar |
+| `kidlearn_progress` | Zvjezdice, značke, naučena slova |
+| `pametnica_saved_game` | Prekinuta igra (za nastavak) |
+| `kidlearn_sound` | Zvuk uključen/isključen |
 
 ---
 
-## 🛠 Tech Stack
+## Tehnologije
 
-| Tool | Version | Purpose |
+| Alat | Verzija | Namjena |
 |------|---------|---------|
 | React | 19 | UI framework |
-| TypeScript | 6 | Type safety |
-| Vite | 8 | Build tool + HMR dev server |
-| Web Speech API | browser built-in | Word pronunciation |
-| Web Audio API | browser built-in | Game sound effects |
-| localStorage | browser built-in | Data persistence |
+| TypeScript | 6 | Tipska sigurnost |
+| Vite | 8 | Build + dev server |
+| Web Speech API | ugrađen | Izgovor srpskih riječi |
+| Web Audio API | ugrađen | Zvučni efekti |
+| localStorage | ugrađen | Čuvanje napretka |
 
-> Zero external UI libraries. Zero audio files. Zero image files.
-> All visuals are emoji — fully portable, works offline immediately.
+> Nema vanjskih UI biblioteka.  
+> Nema audio fajlova — zvuk se generiše programski.  
+> Nema slika — koriste se emoji.
 
 ---
 
-## 🔧 Path Aliases
+## Build za produkciju (Vercel)
 
-Use these in new code instead of long relative paths:
-
-```typescript
-import { useGameStore }  from '@core';
-import { Button }        from '@ui/components';
-import { MemoryGame }    from '@modules';
-import { ALPHABET_DATA } from '@data/alphabet';
-import { useTimer }      from '@hooks/useTimer';
+```
+npm run build
 ```
 
-Aliases are configured in `vite.config.ts` and `tsconfig.app.json`.
+Folder `dist/` je spreman za deploy.  
+`.npmrc` sadrži `legacy-peer-deps=true` (potrebno za Vite 8 + PWA plugin).
 
 ---
 
-## 📦 Portable Deployment
+## Struktura projekta
 
-The `dist/` folder is fully self-contained:
-
-1. `npm run build`
-2. Copy `dist/` anywhere — USB drive, web server, ZIP, GitHub Pages
-3. Open `dist/index.html` in Chrome/Edge/Firefox
+```
+src/
+├── data/           ← Sadržaj igara (slova, kartice, siluete)
+├── modules/        ← Igre (alphabet, memory, shadow)
+├── screens/        ← Ekrani (Home, Menu, Progress, SessionEnd)
+├── services/       ← Audio, govor, storage, sesije
+├── context/        ← AppContext (globalno stanje)
+├── components/     ← UI komponente (Button, Modal, StarDisplay)
+├── hooks/          ← useScript, useTimer, useAudio
+└── types/          ← TypeScript interfejsi
+```
