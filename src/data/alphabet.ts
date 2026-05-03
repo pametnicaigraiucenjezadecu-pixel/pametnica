@@ -7,7 +7,7 @@ export const ALPHABET_DATA: AlphabetItem[] = [
   { letter: 'Г', word: 'Guska',      emoji: '🪿',  phoneme: 'Г' },
   { letter: 'Д', word: 'Deda',       emoji: '👴',  phoneme: 'Д' },
   { letter: 'Ђ', word: 'Đak',        emoji: '🎒',  phoneme: 'Ђ' },
-  { letter: 'Е', word: 'Elen',       emoji: '🦌',  phoneme: 'Е' },
+  { letter: 'Е', word: 'Ekran',      emoji: '📺',  phoneme: 'Е' },
   { letter: 'Ж', word: 'Žaba',       emoji: '🐸',  phoneme: 'Ж' },
   { letter: 'З', word: 'Zec',        emoji: '🐰',  phoneme: 'З' },
   { letter: 'И', word: 'Igra',       emoji: '🎮',  phoneme: 'И' },

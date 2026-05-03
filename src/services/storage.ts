@@ -62,7 +62,7 @@ export const createDefaultProgress = (userId: string): AppProgress => ({
 // ─── Badge Definitions ────────────────────────────────────────────────────────
 export const DEFAULT_BADGES: Badge[] = [
   { id: 'first_memory',     name: 'Majstor pamćenja', description: 'Završio/la prvu igru pamćenja',    emoji: '🧠', unlockedAt: null },
-  { id: 'alphabet_complete',name: 'ABC heroj',         description: 'Naučio/la sva 26 slova',           emoji: '📚', unlockedAt: null },
+  { id: 'alphabet_complete',name: 'Azbuka heroj',       description: 'Naučio/la sva 30 slova azbuke',    emoji: '📚', unlockedAt: null },
   { id: 'shadow_5',         name: 'Lovac na senke',    description: 'Završio/la 5 nivoa senki',         emoji: '🌑', unlockedAt: null },
   { id: 'stars_10',         name: 'Sakupljač zvezda',  description: 'Zaradio/la 10 zvezda',             emoji: '⭐', unlockedAt: null },
   { id: 'stars_30',         name: 'Superzvezda',       description: 'Zaradio/la 30 zvezda',             emoji: '🌟', unlockedAt: null },
@@ -96,7 +96,7 @@ export const checkAndUnlockBadges = (
   const shadowUnlocked   = lettersLearned >= 5;
 
   if (memoryGames >= 1)     unlock('first_memory');
-  if (lettersLearned >= 26) unlock('alphabet_complete');
+  if (lettersLearned >= 30) unlock('alphabet_complete');
   if (shadowLevels >= 5)    unlock('shadow_5');
   if (totalStars >= 10)     unlock('stars_10');
   if (totalStars >= 30)     unlock('stars_30');

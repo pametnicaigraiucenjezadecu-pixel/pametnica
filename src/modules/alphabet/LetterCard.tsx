@@ -34,6 +34,8 @@ interface LetterFocusProps {
 
 export const LetterFocusCard: React.FC<LetterFocusProps> = ({ item, isLearned, onLearn, onClose }) => {
   const s = useScript();
+  // Digraphs Lj, Nj, Dž occupy 2 chars — must highlight both together
+  const digraphLen = /^(?:Lj|LJ|lj|Nj|NJ|nj|Dž|DŽ|dž)/.test(item.word) ? 2 : 1;
 
   const handleSpeak = () => {
     speakSr(t.letterPhrase(item.phoneme, item.word));
@@ -47,8 +49,8 @@ export const LetterFocusCard: React.FC<LetterFocusProps> = ({ item, isLearned, o
         <div className="letter-focus__letter">{item.letter}</div>
         <div className="letter-focus__emoji">{item.emoji}</div>
         <div className="letter-focus__word">
-          <span className="letter-focus__highlight">{s(item.word[0])}</span>
-          {s(item.word.slice(1))}
+          <span className="letter-focus__highlight">{s(item.word.slice(0, digraphLen))}</span>
+          {s(item.word.slice(digraphLen))}
         </div>
 
         <button className="speak-btn" onClick={handleSpeak} aria-label="Čuj izgovor">
