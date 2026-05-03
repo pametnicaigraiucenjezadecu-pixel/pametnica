@@ -49,7 +49,7 @@ export const AlphabetModule: React.FC = () => {
       <div className="progress-bar" style={{ margin: '0 16px 16px' }}>
         <div
           className="progress-bar__fill"
-          style={{ width: `${(learnedCount / 26) * 100}%`, background: '#A29BFE' }}
+          style={{ width: `${(learnedCount / ALPHABET_DATA.length) * 100}%`, background: '#A29BFE' }}
         />
       </div>
 
@@ -83,7 +83,7 @@ export const AlphabetModule: React.FC = () => {
       )}
 
       {/* Completion banner */}
-      {learnedCount === 26 && (
+      {learnedCount === ALPHABET_DATA.length && (
         <div className="completion-banner">
           {s(t.alphabetComplete)}
         </div>

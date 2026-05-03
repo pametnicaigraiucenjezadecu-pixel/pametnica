@@ -26,7 +26,7 @@ import {
 
 const SCRIPT_KEY = 'kidlearn_script';
 const loadScript = (): Script => {
-  try { return localStorage.getItem(SCRIPT_KEY) === 'cyrillic' ? 'cyrillic' : 'latin'; } catch { return 'latin'; }
+  try { return localStorage.getItem(SCRIPT_KEY) === 'latin' ? 'latin' : 'cyrillic'; } catch { return 'cyrillic'; }
 };
 
 const SAVED_GAME_KEY = 'pametnica_saved_game';

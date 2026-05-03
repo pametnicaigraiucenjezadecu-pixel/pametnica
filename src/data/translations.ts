@@ -33,12 +33,12 @@ export const t = {
   memoryMoves: (n: number) => `👆 ${n} poteza`,
 
   // ── Alphabet
-  alphabetTitle: '🔤 Slova',
-  alphabetProgress: (n: number) => `${n} / 26 slova naučeno ⭐`,
+  alphabetTitle: '🔡 Azbuka',
+  alphabetProgress: (n: number) => `${n} / 30 slova naučeno ⭐`,
   btnHear: '🔊 Čuj slovo!',
   btnLearned: '✅ Naučio/la sam!',
   learnedBadge: '🌟 Naučeno! +1 ⭐',
-  alphabetComplete: '🎉 Sjajno! Znaš sva 26 slova! 🎉',
+  alphabetComplete: '🎉 Sjajno! Znaš sva 30 slova azbuke! 🎉',
   toastLearned: (letter: string) => `🌟 Naučio/la si slovo ${letter}! +1 zvezda!`,
   letterPhrase: (phoneme: string, word: string) => `${phoneme}. Reč je ${word}`,
 
@@ -59,7 +59,7 @@ export const t = {
   progressAlphabet: 'Slova',
   progressMemory: 'Igra pamćenja',
   progressShadow: 'Igra senki',
-  progressLetters: (n: number) => `${n} / 26 slova`,
+  progressLetters: (n: number) => `${n} / 30 slova`,
   progressGames: (n: number) => `${n} ${n === 1 ? 'igra' : 'igara'} odigrana`,
   progressLevels: (n: number) => `${n} nivoa završeno`,
   progressBest: 'Najbolje:',

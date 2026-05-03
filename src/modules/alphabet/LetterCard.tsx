@@ -47,7 +47,7 @@ export const LetterFocusCard: React.FC<LetterFocusProps> = ({ item, isLearned, o
         <div className="letter-focus__letter">{item.letter}</div>
         <div className="letter-focus__emoji">{item.emoji}</div>
         <div className="letter-focus__word">
-          <span className="letter-focus__highlight">{item.letter}</span>
+          <span className="letter-focus__highlight">{s(item.word[0])}</span>
           {s(item.word.slice(1))}
         </div>
 

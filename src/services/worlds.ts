@@ -19,7 +19,7 @@ const WORLD_META: Record<WorldId, Pick<WorldStatus, 'id'|'name'|'tagline'|'emoji
     emoji: '🔤',
     color: '#A29BFE',
     bgGradient: 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)',
-    starsTotal: 26,
+    starsTotal: 30,
     unlockHint: 'Završi 1 igru pamćenja!',
   },
   shadow: {
@@ -42,7 +42,7 @@ const UNLOCK = {
 
 const COMPLETE = {
   memory:   (p: AppProgress) => p.memoryScores.reduce((a, s) => a + s.stars, 0) >= 9,
-  alphabet: (p: AppProgress) => p.alphabetProgress.learnedLetters.length >= 26,
+  alphabet: (p: AppProgress) => p.alphabetProgress.learnedLetters.length >= 30,
   shadow:   (p: AppProgress) => p.shadowScores.length >= 9,
 };
 
