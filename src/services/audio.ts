@@ -1,84 +1,138 @@
-// ─── Web Speech API — delegates to Serbian speech service ────────────────────
+// ─── Web Speech API — re-export so callers don't need two imports ─────────────
 export { speakSr as speak } from './speech';
 
-// ─── Web Audio API — sound effects ────────────────────────────────────────────
+import { isSoundEnabled } from './speech';
+
+// ─── Sound Types ──────────────────────────────────────────────────────────────
 type SoundType = 'correct' | 'wrong' | 'complete' | 'flip' | 'click' | 'level_complete';
 
-let _audioCtx: AudioContext | null = null;
+// ─── Global state (one context, one master gain, tracked oscillators) ─────────
+let _ctx: AudioContext | null = null;
+let _master: GainNode | null = null;
+let _activeOscs: OscillatorNode[] = [];
 
-const getAudioContext = (): AudioContext | null => {
+// Debounce: minimum ms between plays of the same short sound
+const DEBOUNCE_MS: Partial<Record<SoundType, number>> = { click: 100, flip: 100 };
+const _lastPlay: Partial<Record<SoundType, number>> = {};
+
+// Master volume (0–1). All tones route through this node.
+const MASTER_VOL = 0.38;
+
+// ─── Initialise / resume audio context ────────────────────────────────────────
+function getCtx(): AudioContext | null {
   try {
-    if (_audioCtx && _audioCtx.state !== 'closed') {
-      if (_audioCtx.state === 'suspended') void _audioCtx.resume();
-      return _audioCtx;
+    if (_ctx && _ctx.state !== 'closed') {
+      if (_ctx.state === 'suspended') void _ctx.resume();
+      return _ctx;
     }
-    const Ctx = window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    _audioCtx = new Ctx();
-    return _audioCtx;
+    const Ctor =
+      window.AudioContext ??
+      (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    _ctx    = new Ctor();
+    _master = _ctx.createGain();
+    _master.gain.value = MASTER_VOL;
+    _master.connect(_ctx.destination);
+    return _ctx;
   } catch {
     return null;
   }
-};
+}
 
-const tone = (
+// ─── Stop every running oscillator immediately ────────────────────────────────
+function stopAll(): void {
+  _activeOscs.forEach(osc => { try { osc.stop(0); } catch {} });
+  _activeOscs = [];
+}
+
+// ─── Single tone helper ───────────────────────────────────────────────────────
+// gain here is relative (0–1); actual volume = gain × MASTER_VOL
+function tone(
   ctx: AudioContext,
   freq: number,
-  start: number,
-  dur: number,
-  type: OscillatorType = 'sine',
-  gain = 0.25
-): void => {
+  start: number,   // seconds from now
+  dur: number,     // sustain duration in seconds
+  type: OscillatorType = 'triangle',
+  gain = 0.65,
+): void {
+  if (!_master) return;
   const osc = ctx.createOscillator();
-  const g = ctx.createGain();
-  osc.connect(g);
-  g.connect(ctx.destination);
-  osc.type = type;
-  osc.frequency.value = freq;
-  g.gain.setValueAtTime(gain, ctx.currentTime + start);
-  g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + dur);
-  osc.start(ctx.currentTime + start);
-  osc.stop(ctx.currentTime + start + dur + 0.01);
-};
+  const env = ctx.createGain();
+  const t   = ctx.currentTime;
 
+  osc.type           = type;
+  osc.frequency.value = freq;
+
+  // 12 ms linear attack → prevents "click" artefact at note onset
+  env.gain.setValueAtTime(0, t + start);
+  env.gain.linearRampToValueAtTime(gain, t + start + 0.012);
+  env.gain.exponentialRampToValueAtTime(0.001, t + start + dur);
+
+  osc.connect(env);
+  env.connect(_master);
+
+  osc.start(t + start);
+  osc.stop(t + start + dur + 0.02);
+
+  _activeOscs.push(osc);
+  osc.onended = () => { _activeOscs = _activeOscs.filter(o => o !== osc); };
+}
+
+// ─── Public API ───────────────────────────────────────────────────────────────
 export const playSound = (type: SoundType): void => {
-  const ctx = getAudioContext();
-  if (!ctx) return;
+  // Respect the global sound toggle (affects both TTS and effects)
+  if (!isSoundEnabled()) return;
+
+  // Debounce rapid same-type plays (e.g. tapping cards fast)
+  const now = Date.now();
+  const debounce = DEBOUNCE_MS[type];
+  if (debounce && ((_lastPlay[type] ?? 0) + debounce) > now) return;
+  _lastPlay[type] = now;
+
+  const ctx = getCtx();
+  if (!ctx || !_master) return;
+
+  // Kill previous sounds — clean start, no stacking
+  stopAll();
 
   switch (type) {
+
+    // ── UI feedback ──────────────────────────────────────────────────────────
     case 'click':
-      tone(ctx, 600, 0, 0.08, 'sine', 0.12);
+      tone(ctx, 660, 0, 0.09, 'sine', 0.55);
       break;
 
     case 'flip':
-      tone(ctx, 440, 0,    0.06, 'triangle', 0.15);
-      tone(ctx, 550, 0.06, 0.06, 'triangle', 0.1);
+      tone(ctx, 440, 0,    0.07, 'triangle', 0.55);
+      tone(ctx, 580, 0.06, 0.08, 'triangle', 0.45);
+      break;
+
+    // ── Game feedback ────────────────────────────────────────────────────────
+    case 'wrong':
+      // Gentle descending "uh-oh" — not harsh, not frustrating for kids
+      tone(ctx, 370, 0,    0.14, 'triangle', 0.55); // F#4
+      tone(ctx, 294, 0.12, 0.24, 'triangle', 0.40); // D4
       break;
 
     case 'correct':
-      // Cartoon "ding ding!" — quick bright arpeggio, triangle = toy-like
-      tone(ctx, 523,  0,    0.07, 'triangle', 0.28); // C5
-      tone(ctx, 659,  0.06, 0.07, 'triangle', 0.26); // E5
-      tone(ctx, 784,  0.12, 0.07, 'triangle', 0.24); // G5
-      tone(ctx, 1047, 0.18, 0.22, 'triangle', 0.32); // C6 — held
-      break;
-
-    case 'wrong':
-      // Gentle "uh-oh" — soft descending, no harsh buzzer for kids
-      tone(ctx, 392, 0,    0.12, 'triangle', 0.18); // G4
-      tone(ctx, 330, 0.10, 0.20, 'triangle', 0.13); // E4
+      // Bright C-E-G-C arpeggio — quick, toy-piano feel (~0.45 s total)
+      tone(ctx, 523,  0,    0.09, 'triangle', 0.72); // C5
+      tone(ctx, 659,  0.08, 0.09, 'triangle', 0.68); // E5
+      tone(ctx, 784,  0.16, 0.09, 'triangle', 0.64); // G5
+      tone(ctx, 1047, 0.24, 0.28, 'triangle', 0.78); // C6 — held
       break;
 
     case 'complete':
     case 'level_complete':
-      // Grand cartoon fanfare
-      tone(ctx, 523,  0,    0.09, 'triangle', 0.30); // C5
-      tone(ctx, 659,  0.08, 0.09, 'triangle', 0.28); // E5
-      tone(ctx, 784,  0.16, 0.09, 'triangle', 0.28); // G5
-      tone(ctx, 1047, 0.24, 0.12, 'triangle', 0.32); // C6
-      tone(ctx, 784,  0.34, 0.07, 'triangle', 0.24); // G5 bounce
-      tone(ctx, 1047, 0.40, 0.10, 'triangle', 0.32); // C6
-      tone(ctx, 1319, 0.48, 0.55, 'triangle', 0.35); // E6 final
-      tone(ctx, 523,  0.24, 0.45, 'sine',     0.14); // bass C5
+      // C-E-G-C6 → bounce → E6 fanfare (~0.9 s total)
+      tone(ctx, 523,  0,    0.09, 'triangle', 0.68); // C5
+      tone(ctx, 659,  0.08, 0.09, 'triangle', 0.68); // E5
+      tone(ctx, 784,  0.16, 0.09, 'triangle', 0.68); // G5
+      tone(ctx, 1047, 0.24, 0.11, 'triangle', 0.72); // C6
+      tone(ctx, 784,  0.33, 0.07, 'triangle', 0.58); // G5 bounce
+      tone(ctx, 1047, 0.39, 0.10, 'triangle', 0.72); // C6
+      tone(ctx, 1319, 0.47, 0.50, 'triangle', 0.80); // E6 — final hold
+      // Warm bass pad for richness (doesn't fight the melody)
+      tone(ctx, 261,  0.24, 0.58, 'sine',     0.28); // C4
       break;
   }
 };
