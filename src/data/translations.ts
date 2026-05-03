@@ -1,5 +1,13 @@
 // ─── KidLearn — Serbian (ekavica) translations ────────────────────────────────
 
+/**
+ * Returns the correct script-system name.
+ * Cyrillic → "Azbuka"  (s() converts to "Азбука")
+ * Latin    → "Abeceda" (not a transliteration — a different word)
+ */
+export const getAlphabetName = (script: string): string =>
+  script === 'cyrillic' ? 'Azbuka' : 'Abeceda';
+
 export const t = {
   // ── App
   appName: 'Pametnica',
@@ -33,12 +41,20 @@ export const t = {
   memoryMoves: (n: number) => `👆 ${n} poteza`,
 
   // ── Alphabet
-  alphabetTitle: '🔡 Azbuka',
+  // script-aware: "🔡 Azbuka" (Cyrillic) / "🔡 Abeceda" (Latin)
+  alphabetTitle:    (script: string) => `🔡 ${getAlphabetName(script)}`,
+  // script-aware tagline for the world map node
+  alphabetTagline:  (script: string) =>
+    script === 'cyrillic' ? 'Nauči azbuku!' : 'Nauči abecedu!',
   alphabetProgress: (n: number) => `${n} / 30 slova naučeno ⭐`,
   btnHear: '🔊 Čuj slovo!',
   btnLearned: '✅ Naučio/la sam!',
   learnedBadge: '🌟 Naučeno! +1 ⭐',
-  alphabetComplete: '🎉 Sjajno! Znaš sva 30 slova azbuke! 🎉',
+  // script-aware completion banner
+  alphabetComplete: (script: string) =>
+    script === 'cyrillic'
+      ? '🎉 Sjajno! Znaš svu azbuku! 🎉'
+      : '🎉 Sjajno! Znaš celu abecedu! 🎉',
   toastLearned: (letter: string) => `🌟 Naučio/la si slovo ${letter}! +1 zvezda!`,
   letterPhrase: (phoneme: string, word: string) => `${phoneme}. Reč je ${word}`,
 

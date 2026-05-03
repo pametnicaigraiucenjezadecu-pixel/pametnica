@@ -40,7 +40,7 @@ export const AlphabetModule: React.FC = () => {
       <div className="module-header">
         <Button variant="ghost" size="sm" onClick={() => navigate('menu')}>{s(t.btnBack)}</Button>
         <div className="module-header__center">
-          <h2 className="module-header__title">{s(t.alphabetTitle)}</h2>
+          <h2 className="module-header__title">{s(t.alphabetTitle(state.script))}</h2>
           <p className="module-header__sub">{s(t.alphabetProgress(learnedCount))}</p>
         </div>
         <div style={{ width: 64 }} />
@@ -86,7 +86,7 @@ export const AlphabetModule: React.FC = () => {
       {/* Completion banner */}
       {learnedCount === ALPHABET_DATA.length && (
         <div className="completion-banner">
-          {s(t.alphabetComplete)}
+          {s(t.alphabetComplete(state.script))}
         </div>
       )}
     </div>

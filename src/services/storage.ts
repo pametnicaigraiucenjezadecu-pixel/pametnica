@@ -62,14 +62,14 @@ export const createDefaultProgress = (userId: string): AppProgress => ({
 // ─── Badge Definitions ────────────────────────────────────────────────────────
 export const DEFAULT_BADGES: Badge[] = [
   { id: 'first_memory',     name: 'Majstor pamćenja', description: 'Završio/la prvu igru pamćenja',    emoji: '🧠', unlockedAt: null },
-  { id: 'alphabet_complete',name: 'Azbuka heroj',       description: 'Naučio/la sva 30 slova azbuke',    emoji: '📚', unlockedAt: null },
+  { id: 'alphabet_complete',name: 'Heroj slova',         description: 'Naučio/la sva 30 slova',            emoji: '📚', unlockedAt: null },
   { id: 'shadow_5',         name: 'Lovac na senke',    description: 'Završio/la 5 nivoa senki',         emoji: '🌑', unlockedAt: null },
   { id: 'stars_10',         name: 'Sakupljač zvezda',  description: 'Zaradio/la 10 zvezda',             emoji: '⭐', unlockedAt: null },
   { id: 'stars_30',         name: 'Superzvezda',       description: 'Zaradio/la 30 zvezda',             emoji: '🌟', unlockedAt: null },
   { id: 'perfect_memory',   name: 'Savršen meč',       description: 'Pobedio/la igru pamćenja sa 3 ⭐', emoji: '🏆', unlockedAt: null },
   { id: 'streak_3',         name: '3 dana zaredom',    description: 'Igrao/la 3 dana uzastopno',        emoji: '🔥', unlockedAt: null },
   { id: 'world_2_unlock',   name: 'Istraživač',        description: 'Odigrao/la prvu igru pamćenja',    emoji: '🗺️', unlockedAt: null },
-  { id: 'world_3_unlock',   name: 'Hodač senki',       description: 'Naučio/la 5 slova azbuke',         emoji: '🌘', unlockedAt: null },
+  { id: 'world_3_unlock',   name: 'Hodač senki',       description: 'Naučio/la 5 slova',                emoji: '🌘', unlockedAt: null },
 ];
 
 // ─── Badge Unlock Logic ───────────────────────────────────────────────────────

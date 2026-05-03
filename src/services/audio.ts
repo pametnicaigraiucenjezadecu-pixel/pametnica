@@ -11,12 +11,17 @@ let _ctx: AudioContext | null = null;
 let _master: GainNode | null = null;
 let _activeOscs: OscillatorNode[] = [];
 
-// Debounce: minimum ms between plays of the same short sound
-const DEBOUNCE_MS: Partial<Record<SoundType, number>> = { click: 100, flip: 100 };
+// ─── Debounce / overlap prevention ───────────────────────────────────────────
+// Global: minimum gap between ANY two sounds — prevents stacking on rapid taps
+const GLOBAL_GAP_MS = 300;
+let _lastAnyPlay = 0;
+
+// Per-type: prevents the same short sound from firing twice in quick succession
+const TYPE_GAP_MS: Partial<Record<SoundType, number>> = { click: 300, flip: 300 };
 const _lastPlay: Partial<Record<SoundType, number>> = {};
 
-// Master volume (0–1). All tones route through this node.
-const MASTER_VOL = 0.38;
+// Master volume (0–1). All tones route through this node. Capped well below 0.4.
+const MASTER_VOL = 0.35;
 
 // ─── Initialise / resume audio context ────────────────────────────────────────
 function getCtx(): AudioContext | null {
@@ -59,7 +64,7 @@ function tone(
   const env = ctx.createGain();
   const t   = ctx.currentTime;
 
-  osc.type           = type;
+  osc.type            = type;
   osc.frequency.value = freq;
 
   // 12 ms linear attack → prevents "click" artefact at note onset
@@ -79,19 +84,26 @@ function tone(
 
 // ─── Public API ───────────────────────────────────────────────────────────────
 export const playSound = (type: SoundType): void => {
-  // Respect the global sound toggle (affects both TTS and effects)
+  // Respect the global sound toggle
   if (!isSoundEnabled()) return;
 
-  // Debounce rapid same-type plays (e.g. tapping cards fast)
   const now = Date.now();
-  const debounce = DEBOUNCE_MS[type];
-  if (debounce && ((_lastPlay[type] ?? 0) + debounce) > now) return;
+
+  // Global gap: block ANY sound if another played within 300 ms
+  if (now - _lastAnyPlay < GLOBAL_GAP_MS) return;
+
+  // Per-type gap: same sound type must wait its own window
+  const typeGap = TYPE_GAP_MS[type];
+  if (typeGap && ((_lastPlay[type] ?? 0) + typeGap) > now) return;
+
+  // Record timestamps
+  _lastAnyPlay   = now;
   _lastPlay[type] = now;
 
   const ctx = getCtx();
   if (!ctx || !_master) return;
 
-  // Kill previous sounds — clean start, no stacking
+  // Kill any previous oscillators before scheduling new ones
   stopAll();
 
   switch (type) {
@@ -109,30 +121,30 @@ export const playSound = (type: SoundType): void => {
     // ── Game feedback ────────────────────────────────────────────────────────
     case 'wrong':
       // Gentle descending "uh-oh" — not harsh, not frustrating for kids
-      tone(ctx, 370, 0,    0.14, 'triangle', 0.55); // F#4
-      tone(ctx, 294, 0.12, 0.24, 'triangle', 0.40); // D4
+      tone(ctx, 370, 0,    0.14, 'triangle', 0.52); // F#4
+      tone(ctx, 294, 0.12, 0.24, 'triangle', 0.38); // D4
       break;
 
     case 'correct':
       // Bright C-E-G-C arpeggio — quick, toy-piano feel (~0.45 s total)
-      tone(ctx, 523,  0,    0.09, 'triangle', 0.72); // C5
-      tone(ctx, 659,  0.08, 0.09, 'triangle', 0.68); // E5
-      tone(ctx, 784,  0.16, 0.09, 'triangle', 0.64); // G5
-      tone(ctx, 1047, 0.24, 0.28, 'triangle', 0.78); // C6 — held
+      tone(ctx, 523,  0,    0.09, 'triangle', 0.68); // C5
+      tone(ctx, 659,  0.08, 0.09, 'triangle', 0.64); // E5
+      tone(ctx, 784,  0.16, 0.09, 'triangle', 0.60); // G5
+      tone(ctx, 1047, 0.24, 0.28, 'triangle', 0.72); // C6 — held
       break;
 
     case 'complete':
     case 'level_complete':
       // C-E-G-C6 → bounce → E6 fanfare (~0.9 s total)
-      tone(ctx, 523,  0,    0.09, 'triangle', 0.68); // C5
-      tone(ctx, 659,  0.08, 0.09, 'triangle', 0.68); // E5
-      tone(ctx, 784,  0.16, 0.09, 'triangle', 0.68); // G5
-      tone(ctx, 1047, 0.24, 0.11, 'triangle', 0.72); // C6
-      tone(ctx, 784,  0.33, 0.07, 'triangle', 0.58); // G5 bounce
-      tone(ctx, 1047, 0.39, 0.10, 'triangle', 0.72); // C6
-      tone(ctx, 1319, 0.47, 0.50, 'triangle', 0.80); // E6 — final hold
-      // Warm bass pad for richness (doesn't fight the melody)
-      tone(ctx, 261,  0.24, 0.58, 'sine',     0.28); // C4
+      tone(ctx, 523,  0,    0.09, 'triangle', 0.65); // C5
+      tone(ctx, 659,  0.08, 0.09, 'triangle', 0.65); // E5
+      tone(ctx, 784,  0.16, 0.09, 'triangle', 0.65); // G5
+      tone(ctx, 1047, 0.24, 0.11, 'triangle', 0.68); // C6
+      tone(ctx, 784,  0.33, 0.07, 'triangle', 0.55); // G5 bounce
+      tone(ctx, 1047, 0.39, 0.10, 'triangle', 0.68); // C6
+      tone(ctx, 1319, 0.47, 0.50, 'triangle', 0.75); // E6 — final hold
+      // Warm bass pad for richness
+      tone(ctx, 261,  0.24, 0.58, 'sine',     0.26); // C4
       break;
   }
 };

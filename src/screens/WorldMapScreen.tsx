@@ -14,9 +14,17 @@ const WorldNode: React.FC<{
   index: number;
   onPlay: (id: WorldId) => void;
 }> = ({ world, index, onPlay }) => {
+  const s = useScript();
+  const { state } = useApp();
+
   const pct = world.starsTotal > 0
     ? Math.min((world.starsEarned / world.starsTotal) * 100, 100)
     : 0;
+
+  // Alphabet tagline is script-sensitive: "Nauči azbuku!" vs "Nauči abecedu!"
+  const tagline = world.id === 'alphabet'
+    ? s(t.alphabetTagline(state.script))
+    : s(world.tagline);
 
   return (
     <div
@@ -30,15 +38,15 @@ const WorldNode: React.FC<{
         style={{ background: world.bgGradient, '--world-color': world.color } as React.CSSProperties}
         onClick={() => world.unlocked && onPlay(world.id)}
         disabled={!world.unlocked}
-        aria-label={world.unlocked ? `Igraj ${world.name}` : `${world.name} — ${world.unlockHint}`}
+        aria-label={world.unlocked ? s(`Igraj ${world.name}`) : `${s(world.name)} — ${s(world.unlockHint)}`}
       >
         <span className="world-bubble__emoji">{world.unlocked ? world.emoji : '🔒'}</span>
         {world.completed && <span className="world-bubble__crown">👑</span>}
       </button>
 
       <div className="world-info">
-        <h3 className="world-info__name">{world.name}</h3>
-        <p className="world-info__tagline">{world.unlocked ? world.tagline : world.unlockHint}</p>
+        <h3 className="world-info__name">{s(world.name)}</h3>
+        <p className="world-info__tagline">{world.unlocked ? tagline : s(world.unlockHint)}</p>
 
         {world.unlocked && (
           <>
@@ -59,6 +67,7 @@ const WorldNode: React.FC<{
 // ─── Notification toast ────────────────────────────────────────────────────────
 const NotificationToast: React.FC = () => {
   const { state, dismissNotification } = useApp();
+  const s = useScript();
   const top = state.notifications[0];
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -74,8 +83,8 @@ const NotificationToast: React.FC = () => {
     <div className="notif-toast" onClick={() => dismissNotification(top.id)}>
       <span className="notif-toast__emoji">{top.emoji}</span>
       <div>
-        <p className="notif-toast__title">{top.title}</p>
-        <p className="notif-toast__msg">{top.message}</p>
+        <p className="notif-toast__title">{s(top.title)}</p>
+        <p className="notif-toast__msg">{s(top.message)}</p>
       </div>
     </div>
   );
@@ -118,7 +127,7 @@ export const WorldMapScreen: React.FC = () => {
       <div className="wm-brand" aria-label="Pametnica">
         <img src="/logo.svg" alt="Pametnica logo" className="wm-brand__logo" />
         <span className="wm-brand__name">Pametnica</span>
-        <span className="wm-autosave" title="Napredak se automatski čuva">✓ Sačuvano</span>
+        <span className="wm-autosave" title={s('Napredak se automatski čuva')}>✓ {s('Sačuvano')}</span>
       </div>
 
       {/* Decorative stars */}
